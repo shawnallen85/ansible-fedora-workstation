@@ -16,8 +16,6 @@ done
 
 source /etc/os-release
 
-ANSIBLE_VERSION=2.9.2-1.${VERSION_ID}
+ANSIBLE_VERSION=2.9.2-1.fc${VERSION_ID}
 
-dnf versionlock delete ansible
 dnf install ansible-${ANSIBLE_VERSION} -y
-dnf versionlock add ansible

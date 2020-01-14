@@ -1,0 +1,22 @@
+---
+- name: Add dotnet repository key
+  rpm_key:
+    state: present
+    key: https://packages.microsoft.com/keys/microsoft.asc
+
+- name: Add dotnet repository
+  get_url:
+    #url: https://packages.microsoft.com/config/fedora/{{ os_release.stdout }}/prod.repo
+    url: https://packages.microsoft.com/config/fedora/{{ fedora_release }}/prod.repo
+    dest: /etc/yum.repos.d/microsoft-prod.repo
+
+
+- name: Remove old dotnet-sdk installations
+  dnf:
+    name: "{{ dotnet_sdk_remove }}"
+    state: absent
+
+- name: Install dotnet-sdk-3.1
+  dnf:
+    name: "dotnet-sdk-3.1"
+    state: latest

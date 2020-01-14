@@ -1,0 +1,28 @@
+---
+- hosts: all
+  vars_files:
+    - "roles/common/vars/main.yml"
+  become: yes
+  become_user: root
+  become_method: sudo
+  roles:
+    - common
+    - dotnet
+    - chrome
+    - gitkraken
+    - dconf
+    - flat-remix
+    - albert
+    - plank
+    #- postman
+    #- vscode
+    #- blender
+    - gimp
+    - inkscape
+    - krita
+    #- mailspring
+    - openscad
+    - remmina
+    #- slack
+    #term- vlc
+    - reboot

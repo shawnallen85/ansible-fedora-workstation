@@ -1,0 +1,14 @@
+---
+- name: Check if gitkraken is installed
+  command: rpm -qa gitkraken
+  register: gitkraken
+  changed_when: False
+  failed_when: False
+  args:
+    warn: false
+
+- name: Install GitKraken
+  dnf:
+    name: https://release.gitkraken.com/linux/gitkraken-amd64.rpm
+    state: present
+  when: (gitkraken.stdout == "")

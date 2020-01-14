@@ -1,0 +1,60 @@
+---
+- name: Create /etc/dconf/profile/user
+  template:
+    src: user.j2
+    dest: /etc/dconf/profile/user
+    mode: '0644'
+
+- name: Create /etc/dconf/db/local.d
+  file:
+    path: /etc/dconf/db/local.d
+    state: directory
+    mode: '0755'
+
+- name: Create /etc/dconf/db/local.d/00-background
+  template:
+    src: 00-background.j2
+    dest: /etc/dconf/db/local.d/00-background
+    mode: '0644'
+
+- name: Create /etc/dconf/db/local.d/00-datetime
+  template:
+    src: 00-datetime.j2
+    dest: /etc/dconf/db/local.d/00-datetime
+    mode: '0644'
+
+- name: Create /etc/dconf/db/local.d/00-interface
+  template:
+    src: 00-interface.j2
+    dest: /etc/dconf/db/local.d/00-interface
+    mode: '0644'
+
+- name: Create /etc/dconf/db/local.d/00-screensaver
+  template:
+    src: 00-screensaver.j2
+    dest: /etc/dconf/db/local.d/00-screensaver
+    mode: '0644'
+
+- name: Create /etc/dconf/db/local.d/00-Defcon27
+  template:
+    src: 00-Defcon27.j2
+    dest: /etc/dconf/db/local.d/00-Defcon27
+    mode: '0644'
+
+- name: Create /etc/dconf/db/local.d/00-shell
+  template:
+    src: 00-shell.j2
+    dest: /etc/dconf/db/local.d/00-shell
+    mode: '0644'
+
+- name: Create /etc/dconf/db/local.d/00-wm-preferences
+  template:
+    src: 00-wm-preferences.j2
+    dest: /etc/dconf/db/local.d/00-wm-preferences
+    mode: '0644'
+
+- name: Update dconf
+  command: dconf update
+
+- name: Restart gdm
+  command: killall gdm

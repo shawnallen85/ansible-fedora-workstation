@@ -56,6 +56,16 @@ This only needs to be ran on the system you will be running Ansible from.
 ansible-playbook -i ~/ansible-hosts.yml main.yml
 ```
 
+```bash
+ansible-playbook -i ~/ansible-hosts.yml pretty.yml -u ansible --private-key=~/ansible-user
+```
+
+Users will need to run the following after deployments to apply themes:
+
+```bash
+sudo dconf update
+```
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details

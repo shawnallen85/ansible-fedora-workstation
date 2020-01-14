@@ -1,0 +1,5 @@
+---
+- name: Install Inkscape
+  flatpak:
+    name: org.inkscape.Inkscape
+    state: present

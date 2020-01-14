@@ -1,0 +1,39 @@
+---
+- name: Install plank
+  dnf:
+    name: plank
+    state: present
+
+- name: Install plank-docklets
+  dnf:
+    name: plank-docklets
+    state: present
+
+- name: Install plank themes
+  command: cp -R --no-preserve=mode,ownership /var/lib/ansible-workstation-assets/plank/themes/ /usr/share/plank/
+  changed_when: False
+
+- name: Update /usr/share/plank/themes permissions
+  file:
+    path: /usr/share/plank/themes
+    state: directory
+    recurse: yes
+    mode: '0755'
+
+- name: Create /etc/dconf/db/local.d/01-dock1
+  template:
+    src: 01-dock1.j2
+    dest: /etc/dconf/db/local.d/01-dock1
+    mode: '0644'
+
+- name: Update dconf
+  command: dconf update
+
+- name: Create /etc/xdg/autostart/plank.desktop
+  template:
+    src: autostart.j2
+    dest: /etc/xdg/autostart/plank.desktop
+    mode: '0644'
+
+- name: Restart gdm
+  command: killall gdm

@@ -1,0 +1,5 @@
+---
+- name: Install Blender
+  snap:
+    name: blender
+    classic: yes

@@ -1,0 +1,3 @@
+---
+dotnet_sdk_remove: ["dotnet-sdk-1.0", "dotnet-sdk-1.1", "dotnet-sdk-2.0", "dotnet-sdk-2.1", "dotnet-sdk-3.0"]
+fedora_release: 30

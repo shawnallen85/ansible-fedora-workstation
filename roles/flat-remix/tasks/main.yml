@@ -1,0 +1,99 @@
+---
+- name: Copy default wallpaper
+  shell: cp --no-preserve=mode,ownership /var/lib/ansible-workstation-assets/wallpaper/{{ wallpaper }}/{{ wallpaper }}.jpg /usr/share/backgrounds/{{ wallpaper }}.jpg && chmod 644 /usr/share/backgrounds/{{ wallpaper }}.jpg
+  when: (wallpaper != "")
+
+- name: Create /etc/dconf/db/local.d/01-background
+  template:
+    src: 01-background.j2
+    dest: /etc/dconf/db/local.d/01-background
+    mode: '0644'
+  when: (wallpaper != "")
+
+- name: Create /etc/dconf/db/local.d/01-screensaver
+  template:
+    src: 01-screensaver.j2
+    dest: /etc/dconf/db/local.d/01-screensaver
+    mode: '0644'
+  when: (wallpaper != "")
+
+- name: Update dconf
+  command: dconf update
+
+- name: Restart gdm
+  command: killall gdm
+
+- name: Add flat-remix repository
+  command: dnf copr enable daniruiz/flat-remix -y
+  args:
+    warn: false
+
+- name: Install flat-remix-gtk
+  dnf:
+    name: flat-remix-gtk
+    state: present
+
+- name: Install flat-remix-gnome
+  dnf:
+    name: flat-remix-gnome
+    state: present
+
+- name: Install flat-remix
+  dnf:
+    name: flat-remix
+    state: present
+
+- name: Install glib2-devel
+  dnf:
+    name: glib2-devel
+    state: present
+
+- name: Install ImageMagick
+  dnf:
+    name: ImageMagick
+    state: present
+
+- name: Install rubygem-sass
+  dnf:
+    name: rubygem-sass
+    state: present
+
+- name: Check flat-remix-gnome
+  stat:
+    path: /var/lib/flat-remix-gnome
+  register: flat_remix_gnome
+
+- name: Clone flat-remix-gnome
+  shell: git clone https://github.com/daniruiz/flat-remix-gnome.git /var/lib/flat-remix-gnome
+  changed_when: False
+  when: ((flat_remix_gnome.stat.isdir is defined and flat_remix_gnome.stat.isdir) == False)
+
+- name: Pull flat-remix-gnome
+  shell: cd /var/lib/flat-remix-gnome && git reset --hard && git pull
+  changed_when: False
+  when: (flat_remix_gnome.stat.isdir is defined and flat_remix_gnome.stat.isdir)
+
+- name: Update /var/lib/flat-remix-gnome permissions
+  file:
+    path: /var/lib/flat-remix-gnome
+    state: directory
+    recurse: yes
+    mode: '0755'
+
+- name: Create /etc/dconf/db/local.d/01-user-theme
+  template:
+    src: 01-user-theme.j2
+    dest: /etc/dconf/db/local.d/01-user-theme
+    mode: '0644'
+
+- name: Create /etc/dconf/db/local.d/01-interface
+  template:
+    src: 01-interface.j2
+    dest: /etc/dconf/db/local.d/01-interface
+    mode: '0644'
+
+- name: Update dconf
+  command: dconf update
+
+- name: Restart gdm
+  command: killall gdm

@@ -1,0 +1,57 @@
+---
+- name: Get Fedora release number
+  shell: source /etc/os-release && echo ${VERSION_ID}
+  register: os_release
+  changed_when: False
+  failed_when: False
+
+- name: Install git
+  dnf:
+    name: git
+    state: present
+
+- name: Clone ansible-workstation-assets
+  git:
+    repo: 'https://github.com/shawnallen85/ansible-workstation-assets.git'
+    dest: /var/lib/ansible-workstation-assets
+    update: yes
+  changed_when: False
+
+- name: Install gnome-tweak-tool
+  dnf:
+    name: gnome-tweak-tool
+    state: present
+
+- name: Install gnome-shell-extensions
+  dnf:
+    name: "{{ gnome_shell_extensions }}"
+    state: present
+
+- name: Install snapd
+  dnf:
+    name: snapd
+    state: present
+  register: snapd
+
+- name: Configure snap classic
+  file:
+    src: /var/lib/snapd/snap
+    dest: /snap
+    state: link
+
+- name: Install flatpak
+  dnf:
+    name: flatpak
+    state: present
+
+- name: Add Flathub repository
+  command: flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+
+- name: Reboot after snap installation
+  reboot:
+  when: snapd.msg is search("Installed")
+
+- name: Upgrade all packages to the latest version
+  dnf:
+    name: "*"
+    state: latest

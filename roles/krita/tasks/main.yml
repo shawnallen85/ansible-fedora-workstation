@@ -1,0 +1,5 @@
+---
+- name: Install Krita
+  flatpak:
+    name: org.kde.krita
+    state: present

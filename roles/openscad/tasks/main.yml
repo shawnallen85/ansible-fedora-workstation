@@ -1,0 +1,5 @@
+---
+- name: Install OpenSCAD
+  flatpak:
+    name: org.openscad.OpenSCAD
+    state: present

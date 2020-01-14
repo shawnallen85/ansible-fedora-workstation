@@ -1,0 +1,21 @@
+---
+- name: Add manuelschneid3r key
+  shell: rpm --import https://build.opensuse.org/projects/home:manuelschneid3r/public_key
+  args:
+    warn: false
+
+- name: Add manuelschneid3r repository
+  shell: dnf config-manager --add-repo https://download.opensuse.org/repositories/home:manuelschneid3r/Fedora_{{ os_release.stdout }}/home:manuelschneid3r.repo
+  args:
+    warn: false
+
+- name: Install albert
+  dnf:
+    name: albert
+    state: present
+
+- name: Create /etc/xdg/autostart/albert.desktop
+  template:
+    src: autostart.j2
+    dest: /etc/xdg/autostart/albert.desktop
+    mode: '0644'

@@ -1,0 +1,14 @@
+---
+- hosts: all
+  vars_files:
+    - "roles/common/vars/main.yml"
+  become: yes
+  become_user: root
+  become_method: sudo
+  roles:
+    - common
+    - dconf
+    - flat-remix
+    - plank
+    - albert
+    - reboot

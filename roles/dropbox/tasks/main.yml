@@ -1,0 +1,6 @@
+---
+- name: Install nautilus-dropbox
+  apt:
+    name: nautilus-dropbox
+    state: present
+    update_cache: no

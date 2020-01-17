@@ -9,10 +9,19 @@
   args:
     warn: false
 
+- name: Check if albert is installed
+  command: rpm -qa albert
+  register: albert
+  changed_when: False
+  failed_when: False
+  args:
+    warn: false
+
 - name: Install albert
   dnf:
     name: albert
     state: present
+  when: (albert.stdout == "")
 
 - name: Create /etc/xdg/autostart/albert.desktop
   template:

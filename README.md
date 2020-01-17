@@ -66,6 +66,8 @@ Users will need to run the following after deployments to apply themes:
 sudo dconf update
 ```
 
+I've found it better to run this before actual users are created.
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details

@@ -1,13 +1,31 @@
 ---
+- name: Check if plank is installed
+  command: rpm -qa plank
+  register: plank
+  changed_when: False
+  failed_when: False
+  args:
+    warn: false
+
 - name: Install plank
   dnf:
     name: plank
     state: present
+  when: (plank.stdout == "")
+
+- name: Check if plank-docklets is installed
+  command: rpm -qa plank-docklets
+  register: plank_docklets
+  changed_when: False
+  failed_when: False
+  args:
+    warn: false
 
 - name: Install plank-docklets
   dnf:
     name: plank-docklets
     state: present
+  when: (plank_docklets.stdout == "")
 
 - name: Install plank themes
   command: cp -R --no-preserve=mode,ownership /var/lib/ansible-workstation-assets/plank/themes/ /usr/share/plank/
@@ -19,21 +37,23 @@
     state: directory
     recurse: yes
     mode: '0755'
+    owner: root
+    group: root
 
 - name: Create /etc/dconf/db/local.d/01-dock1
   template:
     src: 01-dock1.j2
     dest: /etc/dconf/db/local.d/01-dock1
-    mode: '0644'
+  register: dconf_plankdock
 
 - name: Update dconf
   command: dconf update
+  environment:
+    DISPLAY: ":0"
+  when: dconf_plankdock.changed == true
 
 - name: Create /etc/xdg/autostart/plank.desktop
   template:
     src: autostart.j2
     dest: /etc/xdg/autostart/plank.desktop
     mode: '0644'
-
-- name: Restart gdm
-  command: killall gdm

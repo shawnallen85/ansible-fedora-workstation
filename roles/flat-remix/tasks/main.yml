@@ -1,30 +1,43 @@
 ---
 - name: Copy default wallpaper
-  shell: cp --no-preserve=mode,ownership /var/lib/ansible-workstation-assets/wallpaper/{{ wallpaper }}/{{ wallpaper }}.jpg /usr/share/backgrounds/{{ wallpaper }}.jpg && chmod 644 /usr/share/backgrounds/{{ wallpaper }}.jpg
+  command: cp --no-preserve=mode,ownership /var/lib/ansible-workstation-assets/wallpaper/{{ wallpaper }}/{{ wallpaper }}.jpg /usr/share/backgrounds/{{ wallpaper }}.jpg
+  when: (wallpaper != "")
+  args:
+    creates: "/usr/share/backgrounds/{{ wallpaper }}.jpg"
+
+- name: Update wallpaper permissions
+  file:
+    path: "/usr/share/backgrounds/{{ wallpaper }}.jpg"
+    state: file
+    mode: '0644'
+    owner: root
+    group: root
   when: (wallpaper != "")
 
-- name: Create /etc/dconf/db/local.d/01-background
+- name: Create /etc/dconf/db/local.d/01-wallpaper
   template:
-    src: 01-background.j2
-    dest: /etc/dconf/db/local.d/01-background
-    mode: '0644'
-  when: (wallpaper != "")
-
-- name: Create /etc/dconf/db/local.d/01-screensaver
-  template:
-    src: 01-screensaver.j2
-    dest: /etc/dconf/db/local.d/01-screensaver
-    mode: '0644'
+    src: 01-wallpaper.j2
+    dest: /etc/dconf/db/local.d/01-wallpaper
+  register: dconf_wallpaper
   when: (wallpaper != "")
 
 - name: Update dconf
   command: dconf update
-
-- name: Restart gdm
-  command: killall gdm
+  environment:
+    DISPLAY: ":0"
+  when: dconf_wallpaper.changed == true
 
 - name: Add flat-remix repository
-  command: dnf copr enable daniruiz/flat-remix -y
+  command: "dnf copr enable daniruiz/flat-remix -y"
+  args:
+    creates: "/etc/yum.repos.d/_copr:copr.fedorainfracloud.org:daniruiz:flat-remix.repo"
+    warn: false
+
+- name: Check if flat-remix-gtk is installed
+  command: rpm -qa flat-remix-gtk
+  register: flat_remix_gtk
+  changed_when: False
+  failed_when: False
   args:
     warn: false
 
@@ -32,68 +45,78 @@
   dnf:
     name: flat-remix-gtk
     state: present
+  when: (flat_remix_gtk.stdout == "")
+
+- name: Check if flat-remix-gnome is installed
+  command: rpm -qa flat-remix-gnome
+  register: flat_remix_gnome
+  changed_when: False
+  failed_when: False
+  args:
+    warn: false
 
 - name: Install flat-remix-gnome
   dnf:
     name: flat-remix-gnome
     state: present
+  when: (flat_remix_gnome.stdout == "")
+
+- name: Check if flat-remix is installed
+  command: rpm -qa flat-remix
+  register: flat_remix
+  changed_when: False
+  failed_when: False
+  args:
+    warn: false
 
 - name: Install flat-remix
   dnf:
     name: flat-remix
     state: present
+  when: (flat_remix.stdout == "")
 
-- name: Install glib2-devel
-  dnf:
-    name: glib2-devel
-    state: present
+# - name: Install glib2-devel
+#   dnf:
+#     name: glib2-devel
+#     state: present
 
-- name: Install ImageMagick
-  dnf:
-    name: ImageMagick
-    state: present
+# - name: Install ImageMagick
+#   dnf:
+#     name: ImageMagick
+#     state: present
 
-- name: Install rubygem-sass
-  dnf:
-    name: rubygem-sass
-    state: present
+# - name: Check flat-remix-gnome
+#   stat:
+#     path: /var/lib/flat-remix-gnome
+#   register: flat_remix_gnome
 
-- name: Check flat-remix-gnome
-  stat:
-    path: /var/lib/flat-remix-gnome
-  register: flat_remix_gnome
+# - name: Clone flat-remix-gnome
+#   shell: git clone https://github.com/daniruiz/flat-remix-gnome.git /var/lib/flat-remix-gnome
+#   changed_when: False
+#   when: ((flat_remix_gnome.stat.isdir is defined and flat_remix_gnome.stat.isdir) == False)
 
-- name: Clone flat-remix-gnome
-  shell: git clone https://github.com/daniruiz/flat-remix-gnome.git /var/lib/flat-remix-gnome
-  changed_when: False
-  when: ((flat_remix_gnome.stat.isdir is defined and flat_remix_gnome.stat.isdir) == False)
+# - name: Pull flat-remix-gnome
+#   shell: cd /var/lib/flat-remix-gnome && git reset --hard && git pull
+#   changed_when: False
+#   when: (flat_remix_gnome.stat.isdir is defined and flat_remix_gnome.stat.isdir)
 
-- name: Pull flat-remix-gnome
-  shell: cd /var/lib/flat-remix-gnome && git reset --hard && git pull
-  changed_when: False
-  when: (flat_remix_gnome.stat.isdir is defined and flat_remix_gnome.stat.isdir)
+# - name: Update /var/lib/flat-remix-gnome permissions
+#   file:
+#     path: /var/lib/flat-remix-gnome
+#     state: directory
+#     recurse: yes
+#     mode: '0755'
+#     owner: root
+#     group: root
 
-- name: Update /var/lib/flat-remix-gnome permissions
-  file:
-    path: /var/lib/flat-remix-gnome
-    state: directory
-    recurse: yes
-    mode: '0755'
-
-- name: Create /etc/dconf/db/local.d/01-user-theme
+- name: Create /etc/dconf/db/local.d/01-all
   template:
-    src: 01-user-theme.j2
-    dest: /etc/dconf/db/local.d/01-user-theme
-    mode: '0644'
-
-- name: Create /etc/dconf/db/local.d/01-interface
-  template:
-    src: 01-interface.j2
-    dest: /etc/dconf/db/local.d/01-interface
-    mode: '0644'
+    src: 01-all.j2
+    dest: /etc/dconf/db/local.d/01-all
+  register: dconf_all2
 
 - name: Update dconf
   command: dconf update
-
-- name: Restart gdm
-  command: killall gdm
+  environment:
+    DISPLAY: ":0"
+  when: dconf_all2.changed == true

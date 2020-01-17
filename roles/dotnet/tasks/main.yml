@@ -10,7 +10,6 @@
     url: https://packages.microsoft.com/config/fedora/{{ fedora_release }}/prod.repo
     dest: /etc/yum.repos.d/microsoft-prod.repo
 
-
 - name: Remove old dotnet-sdk installations
   dnf:
     name: "{{ dotnet_sdk_remove }}"

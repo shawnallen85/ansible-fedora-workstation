@@ -1,0 +1,15 @@
+---
+- name: Add InSync repository key
+  rpm_key:
+    state: present
+    key: https://d2t3ff60b2tol4.cloudfront.net/repomd.xml.key
+
+- name: Add InSync repository
+  template:
+    src: repo.j2
+    dest: /etc/yum.repos.d/insync.repo
+
+- name: Install insync
+  dnf:
+    name: insync
+    state: latest

@@ -1,5 +1,5 @@
 ---
-- name: Add dotnet repository key
+- name: Add Microsoft repository key
   rpm_key:
     state: present
     key: https://packages.microsoft.com/keys/microsoft.asc
@@ -18,4 +18,4 @@
 - name: Install dotnet-sdk-3.1
   dnf:
     name: "dotnet-sdk-3.1"
-    state: latest
+    state: present

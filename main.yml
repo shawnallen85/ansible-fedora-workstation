@@ -14,17 +14,18 @@
     - flat-remix
     - albert
     - plank
-    # - gimp
-    # - inkscape
-    # - krita
-    # - mailspring
-    # - openscad
-    # - remmina
-
+    - gimp
+    - inkscape
+    - krita
+    - mailspring
+    - openscad
+    - remmina
+    - rpmfusion
+    - vlc
+    - blender
+    - vscode
+    - slack
+    - crossover
+    - beyondcompare
     - reboot
-
-    #- slack
-    #- vlc
     #- postman
-    #- vscode
-    #- blender

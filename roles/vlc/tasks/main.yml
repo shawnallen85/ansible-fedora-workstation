@@ -1,4 +1,5 @@
 ---
-- name: Install VLC
-  snap:
+- name: Install vlc
+  dnf:
     name: vlc
+    state: present

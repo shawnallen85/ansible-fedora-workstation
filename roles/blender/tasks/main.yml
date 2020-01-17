@@ -1,5 +1,5 @@
 ---
-- name: Install Blender
-  snap:
+- name: Install blender
+  dnf:
     name: blender
-    classic: yes
+    state: present

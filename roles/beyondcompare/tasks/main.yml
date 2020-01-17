@@ -1,0 +1,28 @@
+---
+- name: Check scootersoftware key
+  command: rpm -qa gpg-pubkey | grep -i gpg-pubkey-7f8840ce-57bcc758
+  register: scootersoftware
+  changed_when: False
+  failed_when: False
+  args:
+    warn: false
+
+- name: Add scootersoftware key
+  shell: rpm --import https://www.scootersoftware.com/RPM-GPG-KEY-scootersoftware
+  args:
+    warn: false
+  when: (scootersoftware.stdout == "")
+
+- name: Check if bcompare is installed
+  command: rpm -qa bcompare
+  register: bcompare
+  changed_when: False
+  failed_when: False
+  args:
+    warn: false
+
+- name: Install bcompare
+  dnf:
+    name: https://www.scootersoftware.com/bcompare-4.3.3.24545.x86_64.rpm
+    state: present
+  when: (bcompare.stdout == "")

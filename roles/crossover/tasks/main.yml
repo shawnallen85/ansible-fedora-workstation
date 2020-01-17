@@ -1,0 +1,14 @@
+---
+- name: Check if crossover is installed
+  command: rpm -qa crossover
+  register: crossover
+  changed_when: False
+  failed_when: False
+  args:
+    warn: false
+
+- name: Install crossover
+  dnf:
+    name: https://media.codeweavers.com/pub/crossover/cxlinux/demo/crossover-19.0.1-1.rpm
+    state: present
+  when: (crossover.stdout == "")

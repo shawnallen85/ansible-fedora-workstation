@@ -1,5 +1,15 @@
 ---
-- name: Install Visual Studio Code
-  snap:
+- name: Add Microsoft repository key
+  rpm_key:
+    state: present
+    key: https://packages.microsoft.com/keys/microsoft.asc
+
+- name: Add code repository
+  template:
+    src: repo.j2
+    dest: /etc/yum.repos.d/vscode.repo
+
+- name: Install code
+  dnf:
     name: code
-    classic: yes
+    state: latest

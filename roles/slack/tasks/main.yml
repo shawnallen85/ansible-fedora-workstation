@@ -1,5 +1,14 @@
 ---
-- name: Install Slack
-  snap:
-    name: slack
-    classic: yes
+- name: Check if slack is installed
+  command: rpm -qa slack
+  register: slack
+  changed_when: False
+  failed_when: False
+  args:
+    warn: false
+
+- name: Install slack
+  dnf:
+    name: https://downloads.slack-edge.com/linux_releases/slack-4.2.0-0.1.fc21.x86_64.rpm
+    state: present
+  when: (slack.stdout == "")

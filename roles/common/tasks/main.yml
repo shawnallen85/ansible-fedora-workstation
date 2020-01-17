@@ -27,20 +27,20 @@
     name: "{{ gnome_shell_extensions }}"
     state: present
 
-# - name: Install flatpak
-#   dnf:
-#     name: flatpak
-#     state: present
-#   register: flatpak
+- name: Install flatpak
+  dnf:
+    name: flatpak
+    state: present
+  register: flatpak
 
-# - name: Add Flathub repository
-#   flatpak_remote:
-#     name: flathub
-#     state: present
-#     flatpakrepo_url: https://flathub.org/repo/flathub.flatpakrepo
-#   when: flatpak.msg is search("Installed")
+- name: Add Flathub repository
+  flatpak_remote:
+    name: flathub
+    state: present
+    flatpakrepo_url: https://flathub.org/repo/flathub.flatpakrepo
+  when: flatpak.msg is search("Installed")
 
-# - name: Upgrade all packages to the latest version
-#   dnf:
-#     name: "*"
-#     state: latest
+- name: Upgrade all packages to the latest version
+  dnf:
+    name: "*"
+    state: latest

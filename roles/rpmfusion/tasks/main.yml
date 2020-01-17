@@ -1,0 +1,28 @@
+---
+- name: Check if rpmfusion-free-release is installed
+  command: rpm -qa rpmfusion-free-release
+  register: rpmfusion_free
+  changed_when: False
+  failed_when: False
+  args:
+    warn: false
+
+- name: Install rpmfusion-free-release
+  shell: "dnf install https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm -y"
+  args:
+    warn: false
+  when: (rpmfusion_free.stdout == "")
+
+- name: Check if rpmfusion-nonfree-release is installed
+  command: rpm -qa rpmfusion-nonfree-release
+  register: rpmfusion_nonfree
+  changed_when: False
+  failed_when: False
+  args:
+    warn: false
+
+- name: Install rpmfusion-nonfree-release
+  shell: "dnf install https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm -y"
+  args:
+    warn: false
+  when: (rpmfusion_nonfree.stdout == "")

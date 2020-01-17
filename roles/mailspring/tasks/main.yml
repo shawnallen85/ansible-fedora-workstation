@@ -11,8 +11,20 @@
   args:
     warn: false
 
+- name: Download mailspring
+  get_url:
+    url: https://updates.getmailspring.com/download?platform=linuxRpm
+    dest: /tmp/mailspring.rpm
+  when: (mailspring.stdout == "")
+
 - name: Install Mailspring
   dnf:
-    name: https://updates.getmailspring.com/download?platform=linuxRpm
+    name: /tmp/mailspring.rpm
     state: present
+  when: (mailspring.stdout == "")
+
+- name: Remove Mailspring rpm
+  file:
+    path: /tmp/mailspring.rpm
+    state: absent
   when: (mailspring.stdout == "")

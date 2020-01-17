@@ -38,7 +38,6 @@
     name: flathub
     state: present
     flatpakrepo_url: https://flathub.org/repo/flathub.flatpakrepo
-  when: flatpak.msg is search("Installed")
 
 - name: Upgrade all packages to the latest version
   dnf:

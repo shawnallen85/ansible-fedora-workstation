@@ -1,13 +1,23 @@
 ---
+- name: Check manuelschneid3r key
+  command: rpm -qa gpg-pubkey | grep -i gpg-pubkey-e192a257-5e042aeb
+  register: manuelschneid3r
+  changed_when: False
+  failed_when: False
+  args:
+    warn: false
+
 - name: Add manuelschneid3r key
   shell: rpm --import https://build.opensuse.org/projects/home:manuelschneid3r/public_key
   args:
     warn: false
+  when: (manuelschneid3r.stdout == "")
 
 - name: Add manuelschneid3r repository
   shell: dnf config-manager --add-repo https://download.opensuse.org/repositories/home:manuelschneid3r/Fedora_{{ os_release.stdout }}/home:manuelschneid3r.repo
   args:
     warn: false
+    creates: "/etc/yum.repos.d/home:manuelschneid3r.repo"
 
 - name: Check if albert is installed
   command: rpm -qa albert

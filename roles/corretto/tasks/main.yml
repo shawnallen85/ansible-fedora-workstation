@@ -1,0 +1,28 @@
+---
+- name: Check if Corretto 8 is installed
+  command: rpm -qa java-1.8.0-amazon-corretto-devel
+  register: corretto8
+  changed_when: False
+  failed_when: False
+  args:
+    warn: false
+
+- name: Install Corretto 8
+  dnf:
+    name: https://corretto.aws/downloads/latest/amazon-corretto-8-x64-linux-jdk.rpm
+    state: present
+  when: (corretto8.stdout == "")
+
+- name: Check if Corretto 11 is installed
+  command: rpm -qa java-11-amazon-corretto-devel
+  register: corretto11
+  changed_when: False
+  failed_when: False
+  args:
+    warn: false
+
+- name: Install Corretto 11
+  dnf:
+    name: https://corretto.aws/downloads/latest/amazon-corretto-11-x64-linux-jdk.rpm
+    state: present
+  when: (corretto11.stdout == "")

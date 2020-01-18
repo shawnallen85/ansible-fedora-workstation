@@ -1,0 +1,12 @@
+#!/bin/bash
+
+if [ -f /opt/jetbrains/toolbox/settings.json ]; then
+	mkdir -p ~/.local/share/JetBrains/Toolbox/
+    if [ ~/.local/share/JetBrains/Toolbox/.settings.json ]; then
+        cp /opt/jetbrains/toolbox/settings.json ~/.local/share/JetBrains/Toolbox/.settings.json
+    fi
+fi
+
+if [ -d /opt/jetbrains/bin ]; then
+	export PATH="$PATH:/opt/jetbrains/bin"
+fi

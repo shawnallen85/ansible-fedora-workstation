@@ -1,4 +1,45 @@
 ---
-- name: Install Postman
-  snap:
-    name: postman
+- name: Stat Postman
+  stat:
+    path: /opt/postman
+  register: postman_stat
+
+- name: Create /opt/postman
+  file:
+    path: /opt/postman
+    state: directory
+    recurse: yes
+    mode: '0777'
+    owner: root
+    group: root
+  when: postman_stat.stat.exists == False
+
+- name: Download Postman
+  get_url:
+    url: https://dl.pstmn.io/download/latest/linux64
+    dest: /tmp/Postman-linux-x64.tar.gz
+  when: postman_stat.stat.exists == False
+
+- name: Extract Postman
+  unarchive:
+    src: /tmp/Postman-linux-x64.tar.gz
+    dest: /tmp/
+    remote_src: yes
+  when: postman_stat.stat.exists == False
+
+- name: Stat extract directory
+  stat:
+    path: /tmp/Postman
+  register: pm_stat
+
+- name: Move extract directory to /opt/postman
+  shell: mv /tmp/Postman/Postman /opt/postman && mv /tmp/Postman/app /opt/postman/
+  when:
+    - pm_stat.stat.exists
+    - postman_stat.stat.exists == False
+
+- name: Create Postman Launcher
+  template:
+    src: desktop-entry.j2
+    dest: /usr/share/applications/postman.desktop
+    mode: '0644'

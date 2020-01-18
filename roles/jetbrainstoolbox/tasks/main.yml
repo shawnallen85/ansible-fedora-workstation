@@ -1,0 +1,100 @@
+---
+- name: Stat Jetbrains Root
+  stat:
+    path: /opt/jetbrains
+  register: jbr_stat
+
+- name: Create /opt/jetbrains/toolbox
+  file:
+    path: /opt/jetbrains/toolbox
+    state: directory
+    recurse: yes
+    mode: '0777'
+    owner: root
+    group: root
+  when: jbr_stat.stat.exists == False
+
+- name: Create /opt/jetbrains/lib
+  file:
+    path: /opt/jetbrains/lib
+    state: directory
+    recurse: yes
+    mode: '0777'
+    owner: root
+    group: root
+  when: jbr_stat.stat.exists == False
+
+- name: Create /opt/jetbrains/bin
+  file:
+    path: /opt/jetbrains/bin
+    state: directory
+    recurse: yes
+    mode: '0777'
+    owner: root
+    group: root
+  when: jbr_stat.stat.exists == False
+
+- name: Stat Jetbrains Toolbox
+  stat:
+    path: /opt/jetbrains/toolbox/jetbrains-toolbox
+  register: jbt_stat
+
+- name: Download Jetbrains Toolbox
+  get_url:
+    url: https://download.jetbrains.com/toolbox/jetbrains-toolbox-1.16.6207.tar.gz
+    dest: /tmp/jetbrains-toolbox.tar.gz
+  when: jbt_stat.stat.exists == False
+
+- name: Extract Jetbrains Toolbox
+  unarchive:
+    src: /tmp/jetbrains-toolbox.tar.gz
+    dest: /opt/jetbrains/toolbox
+    remote_src: yes
+  when: jbt_stat.stat.exists == False
+
+- name: Stat extract directory
+  stat:
+    path: /opt/jetbrains/toolbox/jetbrains-toolbox-1.16.6207
+  register: jb_stat
+
+- name: Move extract directory to parent
+  command: mv /opt/jetbrains/toolbox/jetbrains-toolbox-1.16.6207/jetbrains-toolbox /opt/jetbrains/toolbox
+  when:
+    - jb_stat.stat.exists
+    - jbt_stat.stat.exists == False
+
+- name: Delete extract directory
+  file:
+    path: /opt/jetbrains/toolbox/jetbrains-toolbox-1.16.6207
+    state: absent
+  when: jb_stat.stat.exists
+
+- name: Create Jetbrains Toolbox Icon
+  template:
+    src: toolbox.j2
+    dest: /opt/jetbrains/toolbox/toolbox.svg
+    mode: '0644'
+
+- name: Create Jetbrains Toolbox Settings
+  template:
+    src: settings.j2
+    dest: /opt/jetbrains/toolbox/settings.json
+    mode: '0644'
+
+- name: Create Jetbrains Toolbox Launcher
+  template:
+    src: desktop-entry.j2
+    dest: /usr/share/applications/jetbrains-toolbox.desktop
+    mode: '0644'
+
+- name: Create /etc/xdg/autostart/jetbrains-toolbox.desktop
+  template:
+    src: desktop-entry.j2
+    dest: /etc/xdg/autostart/jetbrains-toolbox.desktop
+    mode: '0644'
+
+- name: Create Jetbrains Toolbox Profile Entry
+  template:
+    src: profile.j2
+    dest: /etc/profile.d/jetbrains-toolbox.sh
+    mode: '0744'

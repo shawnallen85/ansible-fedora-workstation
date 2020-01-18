@@ -28,5 +28,7 @@
     - crossover
     - beyondcompare
     - insync
-    - reboot
-    #- postman
+    - corretto
+    - jetbrainstoolbox
+    - postman
+    #- reboot

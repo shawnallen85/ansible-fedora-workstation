@@ -31,4 +31,4 @@
     - corretto
     - jetbrainstoolbox
     - postman
-    #- reboot
+    - reboot

@@ -40,17 +40,23 @@
     owner: root
     group: root
 
-- name: Create /etc/dconf/db/local.d/01-dock1
-  template:
-    src: 01-dock1.j2
-    dest: /etc/dconf/db/local.d/01-dock1
-  register: dconf_plankdock
+# - name: Create /etc/dconf/db/local.d/01-dock1
+#   template:
+#     src: 01-dock1.j2
+#     dest: /etc/dconf/db/local.d/01-dock1
+#   register: dconf_plankdock
 
-- name: Update dconf
-  command: dconf update
-  environment:
-    DISPLAY: ":0"
-  when: dconf_plankdock.changed == true
+# - name: Update dconf
+#   command: dconf update
+#   environment:
+#     DISPLAY: ":0"
+#   when: dconf_plankdock.changed == true
+
+- name: /net/launchpad/plank/docks/dock1/theme
+  dconf:
+    key: "/net/launchpad/plank/docks/dock1/theme"
+    value: "Glassient"
+    state: present
 
 - name: Create /etc/xdg/autostart/plank.desktop
   template:

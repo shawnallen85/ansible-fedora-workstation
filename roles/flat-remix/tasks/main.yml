@@ -14,18 +14,18 @@
     group: root
   when: (wallpaper != "")
 
-- name: Create /etc/dconf/db/local.d/01-wallpaper
-  template:
-    src: 01-wallpaper.j2
-    dest: /etc/dconf/db/local.d/01-wallpaper
-  register: dconf_wallpaper
-  when: (wallpaper != "")
+# - name: Create /etc/dconf/db/local.d/01-wallpaper
+#   template:
+#     src: 01-wallpaper.j2
+#     dest: /etc/dconf/db/local.d/01-wallpaper
+#   register: dconf_wallpaper
+#   when: (wallpaper != "")
 
-- name: Update dconf
-  command: dconf update
-  environment:
-    DISPLAY: ":0"
-  when: dconf_wallpaper.changed == true
+# - name: Update dconf
+#   command: dconf update
+#   environment:
+#     DISPLAY: ":0"
+#   when: dconf_wallpaper.changed == true
 
 - name: Add flat-remix repository
   command: "dnf copr enable daniruiz/flat-remix -y"
@@ -109,14 +109,39 @@
 #     owner: root
 #     group: root
 
-- name: Create /etc/dconf/db/local.d/01-all
-  template:
-    src: 01-all.j2
-    dest: /etc/dconf/db/local.d/01-all
-  register: dconf_all2
+# - name: Create /etc/dconf/db/local.d/01-all
+#   template:
+#     src: 01-all.j2
+#     dest: /etc/dconf/db/local.d/01-all
+#   register: dconf_all2
 
-- name: Update dconf
-  command: dconf update
-  environment:
-    DISPLAY: ":0"
-  when: dconf_all2.changed == true
+# - name: Update dconf
+#   command: dconf update
+#   environment:
+#     DISPLAY: ":0"
+#   when: dconf_all2.changed == true
+
+- name: /org/gnome/desktop/background/picture-uri
+  dconf:
+    key: "/org/gnome/desktop/background/picture-uri"
+    value: "file:///usr/share/backgrounds/{{ wallpaper }}.jpg"
+    state: present
+  when: (wallpaper != "")
+
+- name: /org/gnome/desktop/interface/gtk-theme
+  dconf:
+    key: "/org/gnome/desktop/interface/gtk-theme"
+    value: "Flat-Remix-GTK-Blue-Dark"
+    state: present
+
+- name: /org/gnome/desktop/interface/icon-theme
+  dconf:
+    key: "/org/gnome/desktop/interface/icon-theme"
+    value: "Flat-Remix-Blue-Dark"
+    state: present
+
+- name: /org/gnome/shell/extensions/user-theme/name
+  dconf:
+    key: "/org/gnome/shell/extensions/user-theme/name"
+    value: "Flat-Remix-Miami"
+    state: present

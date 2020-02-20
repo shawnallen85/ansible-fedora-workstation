@@ -14,14 +14,206 @@
     owner: root
     group: root
 
-- name: Create /etc/dconf/db/local.d/00-all
-  template:
-    src: 00-all.j2
-    dest: /etc/dconf/db/local.d/00-all
-  register: dconf_all
+# - name: Create /etc/dconf/db/local.d/00-all
+#   template:
+#     src: 00-all.j2
+#     dest: /etc/dconf/db/local.d/00-all
+#   register: dconf_all
 
-- name: Update dconf
-  command: dconf update
-  environment:
-    DISPLAY: ":0"
-  when: dconf_all.changed == true
+# - name: Update dconf
+#   command: dconf update
+#   environment:
+#     DISPLAY: ":0"
+#   when: dconf_all.changed == true
+
+- name: /org/gnome/desktop/background/picture-options
+  dconf:
+    key: "/org/gnome/desktop/background/picture-options"
+    value: "zoom"
+    state: present
+
+- name: /org/gnome/desktop/background/primary-color
+  dconf:
+    key: "/org/gnome/desktop/background/primary-color"
+    value: "#000000000000"
+    state: present
+
+- name: /org/gnome/desktop/background/secondary-color
+  dconf:
+    key: "/org/gnome/desktop/background/secondary-color"
+    value: "#000000000000"
+    state: present
+
+- name: /org/gnome/desktop/datetime/automatic-timezone
+  dconf:
+    key: "/org/gnome/desktop/datetime/automatic-timezone"
+    value: "true"
+    state: present
+
+- name: /org/gnome/terminal/legacy/profiles:/Defcon27/background-color
+  dconf:
+    key: "/org/gnome/terminal/legacy/profiles:/Defcon27/background-color"
+    value: "rgb(0,0,0)"
+    state: present
+
+- name: /org/gnome/terminal/legacy/profiles:/Defcon27/bold-color
+  dconf:
+    key: "/org/gnome/terminal/legacy/profiles:/Defcon27/bold-color"
+    value: "rgb(181,90,252)"
+    state: present
+
+- name: /org/gnome/terminal/legacy/profiles:/Defcon27/bold-color-same-as-fg
+  dconf:
+    key: "/org/gnome/terminal/legacy/profiles:/Defcon27/bold-color-same-as-fg"
+    value: "false"
+    state: present
+
+- name: /org/gnome/terminal/legacy/profiles:/Defcon27/cursor-background-color
+  dconf:
+    key: "/org/gnome/terminal/legacy/profiles:/Defcon27/cursor-background-color"
+    value: "rgb(255,99,190)"
+    state: present
+
+- name: /org/gnome/terminal/legacy/profiles:/Defcon27/cursor-colors-set
+  dconf:
+    key: "/org/gnome/terminal/legacy/profiles:/Defcon27/cursor-colors-set"
+    value: "true"
+    state: present
+
+- name: /org/gnome/terminal/legacy/profiles:/Defcon27/cursor-foreground-color
+  dconf:
+    key: "/org/gnome/terminal/legacy/profiles:/Defcon27/cursor-foreground-color"
+    value: "rgb(254,122,193)"
+    state: present
+
+- name: /org/gnome/terminal/legacy/profiles:/Defcon27/foreground-color
+  dconf:
+    key: "/org/gnome/terminal/legacy/profiles:/Defcon27/foreground-color"
+    value: "rgb(7,202,249)"
+    state: present
+
+- name: /org/gnome/terminal/legacy/profiles:/Defcon27/highlight-background-color
+  dconf:
+    key: "/org/gnome/terminal/legacy/profiles:/Defcon27/highlight-background-color"
+    value: "rgb(0,0,0)"
+    state: present
+
+- name: /org/gnome/terminal/legacy/profiles:/Defcon27/highlight-background-color
+  dconf:
+    key: "/org/gnome/terminal/legacy/profiles:/Defcon27/highlight-background-color"
+    value: "rgb(0,0,0)"
+    state: present
+
+- name: /org/gnome/terminal/legacy/profiles:/Defcon27/highlight-colors-set
+  dconf:
+    key: "/org/gnome/terminal/legacy/profiles:/Defcon27/highlight-colors-set"
+    value: "true"
+    state: present
+
+- name: /org/gnome/terminal/legacy/profiles:/Defcon27/highlight-foreground-color
+  dconf:
+    key: "/org/gnome/terminal/legacy/profiles:/Defcon27/highlight-foreground-color"
+    value: "rgb(255,99,190)"
+    state: present
+
+- name: /org/gnome/terminal/legacy/profiles:/Defcon27/use-theme-colors
+  dconf:
+    key: "/org/gnome/terminal/legacy/profiles:/Defcon27/use-theme-colors"
+    value: "false"
+    state: present
+
+- name: /org/gnome/terminal/legacy/profiles:/Defcon27/visible-name
+  dconf:
+    key: "/org/gnome/terminal/legacy/profiles:/Defcon27/visible-name"
+    value: "Defcon27"
+    state: present
+
+- name: /org/gnome/terminal/legacy/profiles:/default
+  dconf:
+    key: "/org/gnome/terminal/legacy/profiles:/default"
+    value: "Defcon27"
+    state: present
+
+- name: /org/gnome/terminal/legacy/profiles:/list
+  dconf:
+    key: "/org/gnome/terminal/legacy/profiles:/list"
+    value: "['Defcon27']"
+    state: present
+
+- name: /org/gnome/desktop/interface/clock-format
+  dconf:
+    key: "/org/gnome/desktop/interface/clock-format"
+    value: "12h"
+    state: present
+
+- name: /org/gnome/desktop/interface/clock-show-date
+  dconf:
+    key: "/org/gnome/desktop/interface/clock-show-date"
+    value: "true"
+    state: present
+
+- name: /org/gnome/desktop/interface/clock-show-seconds
+  dconf:
+    key: "/org/gnome/desktop/interface/clock-show-seconds"
+    value: "true"
+    state: present
+
+- name: /org/gnome/desktop/interface/clock-show-weekday
+  dconf:
+    key: "/org/gnome/desktop/interface/clock-show-weekday"
+    value: "true"
+    state: present
+
+- name: /org/gnome/desktop/interface/gtk-im-module
+  dconf:
+    key: "/org/gnome/desktop/interface/gtk-im-module"
+    value: "gtk-im-context-simple"
+    state: present
+
+- name: /org/gnome/desktop/interface/show-battery-percentage
+  dconf:
+    key: "/org/gnome/desktop/interface/show-battery-percentage"
+    value: "true"
+    state: present
+
+- name: /org/gnome/desktop/interface/toolkit-accessibility
+  dconf:
+    key: "/org/gnome/desktop/interface/toolkit-accessibility"
+    value: "false"
+    state: present
+
+- name: /org/gnome/desktop/interface/enable-hot-corners
+  dconf:
+    key: "/org/gnome/desktop/interface/enable-hot-corners"
+    value: "false"
+    state: present
+
+- name: /org/gnome/desktop/screensaver/picture-options
+  dconf:
+    key: "/org/gnome/desktop/screensaver/picture-options"
+    value: "zoom"
+    state: present
+
+- name: /org/gnome/desktop/screensaver/primary-color
+  dconf:
+    key: "/org/gnome/desktop/screensaver/primary-color"
+    value: "#000000000000"
+    state: present
+
+- name: /org/gnome/desktop/screensaver/secondary-color
+  dconf:
+    key: "/org/gnome/desktop/screensaver/secondary-color"
+    value: "#000000000000"
+    state: present
+
+- name: /org/gnome/shell/enabled-extensions
+  dconf:
+    key: "/org/gnome/shell/enabled-extensions"
+    value: "['background-logo@fedorahosted.org', 'user-theme@gnome-shell-extensions.gcampax.github.com', 'apps-menu@gnome-shell-extensions.gcampax.github.com']"
+    state: present
+
+- name: /org/gnome/desktop/wm/preferences/button-layout
+  dconf:
+    key: "/org/gnome/desktop/wm/preferences/button-layout"
+    value: "close,minimize,maximize:appmenu"
+    state: present
